@@ -70,7 +70,7 @@
         zips.sort((a, b) => a.name.localeCompare(b.name));
         for (const f of zips) {
           const li = document.createElement('li');
-          li.innerHTML = `<a href="${f.download_url}" download>${stripExt(f.name)}</a>`;
+          li.textContent = stripExt(f.name);
           list.appendChild(li);
         }
       } catch (e) {
