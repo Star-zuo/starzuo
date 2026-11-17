@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Star-zuo</title>
+  <title>Star-zuo · Software</title>
   <style>
     :root {
       --bg: #0d1117;
@@ -12,6 +12,7 @@
       --text: #e6edf3;
       --muted: #8b949e;
       --accent: #58a6ff;
+      --green: #3fb950;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -20,9 +21,9 @@
       color: var(--text);
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: 24px;
+      padding: 40px 24px;
     }
     .card {
       background: var(--card);
@@ -47,24 +48,49 @@
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin: 24px 0 10px;
+      margin: 24px 0 12px;
     }
-    p, li { line-height: 1.8; font-size: 14px; color: var(--text); }
-    ul { padding-left: 20px; }
+    .list { list-style: none; padding: 0; }
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(110,118,129,.12);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: border-color .15s ease;
+    }
+    .item:hover { border-color: var(--accent); }
+    .icon { font-size: 20px; }
+    .name { flex: 1; font-weight: 600; font-size: 15px; }
+    .size { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .dl {
+      color: var(--green);
+      font-size: 13px;
+      text-decoration: none;
+      border: 1px solid var(--green);
+      border-radius: 6px;
+      padding: 5px 12px;
+      white-space: nowrap;
+    }
+    .dl:hover { background: rgba(63,185,80,.15); text-decoration: none; }
+    .status { color: var(--muted); font-size: 14px; padding: 8px 0; }
     .notice {
-      margin-top: 28px;
+      margin-top: 24px;
       padding: 16px 18px;
       background: rgba(88,166,255,.08);
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
       border-radius: 8px;
     }
-    .notice p { color: var(--muted); }
+    .notice p { color: var(--muted); font-size: 13px; line-height: 1.8; }
     .notice strong { color: var(--text); }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
     footer {
-      margin-top: 28px;
+      margin-top: 24px;
       padding-top: 16px;
       border-top: 1px solid var(--border);
       color: var(--muted);
@@ -77,14 +103,11 @@
   <main class="card">
     <div class="avatar">S</div>
     <h1>Star-zuo</h1>
-    <p class="subtitle">个人主页 · Personal Page</p>
+    <p class="subtitle">软件下载 · Software Downloads</p>
 
-    <h2>关于</h2>
-    <p>这里是 Star-zuo 的个人页面，用于展示个人项目与作品。</p>
-
-    <h2>项目仓库</h2>
-    <ul>
-      <li><a href="https://github.com/Star-zuo/starzuo" target="_blank" rel="noopener">GitHub · Star-zuo/starzuo</a></li>
+    <h2>下载列表</h2>
+    <ul class="list" id="file-list">
+      <li class="status" id="status">正在加载…</li>
     </ul>
 
     <div class="notice">
@@ -92,9 +115,60 @@
       <p>Copyright (c) 2026 Star-zuo. All rights reserved.<br>
       本站及仓库内容受版权法保护，未经事先书面许可，不得复制、修改、再分发或用于商业用途。<br>
       授权请联系：<a href="mailto:admin@yuny.work">admin@yuny.work</a></p>
+      <p style="margin-top:8px">列表中的软件压缩包归各自版权方所有：WordPress 基于 GPL 协议发布；Discuz! 版权归 Comsenz/Tencent 所有。</p>
     </div>
 
     <footer>© 2026 Star-zuo · All rights reserved.</footer>
   </main>
+
+  <script>
+    const REPO_OWNER = 'Star-zuo';
+    const REPO_NAME = 'starzuo';
+    const DIR = 'software';
+    const ZIP_RE = /\.(zip|tar|gz|tgz|7z)$/i;
+
+    function fmtSize(bytes) {
+      if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + ' MB';
+      return (bytes / 1024).toFixed(1) + ' KB';
+    }
+
+    function stripExt(name) {
+      return name.replace(/\.(zip|tar\.gz|tgz|gz|7z)$/i, '');
+    }
+
+    async function loadFiles() {
+      const list = document.getElementById('file-list');
+      const status = document.getElementById('status');
+      try {
+        const resp = await fetch(
+          `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${DIR}`
+        );
+        if (!resp.ok) throw new Error('API ' + resp.status);
+        const files = await resp.json();
+        const zips = files.filter(f => f.type === 'file' && ZIP_RE.test(f.name));
+
+        status.remove();
+        if (zips.length === 0) {
+          list.innerHTML = '<li class="status">暂无压缩包</li>';
+          return;
+        }
+        zips.sort((a, b) => a.name.localeCompare(b.name));
+        for (const f of zips) {
+          const li = document.createElement('li');
+          li.className = 'item';
+          li.innerHTML =
+            `<span class="icon">📦</span>` +
+            `<span class="name">${stripExt(f.name)}</span>` +
+            `<span class="size">${fmtSize(f.size)}</span>` +
+            `<a class="dl" href="${f.download_url}" download>下载</a>`;
+          list.appendChild(li);
+        }
+      } catch (e) {
+        status.textContent = '加载失败：' + e.message + '（请稍后刷新重试）';
+      }
+    }
+
+    loadFiles();
+  </script>
 </body>
 </html>
