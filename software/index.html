@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Star-zuo</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 640px;
+      width: 100%;
+      padding: 48px 40px;
+    }
+    .avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #58a6ff, #bc8cff);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; font-weight: 700; color: #fff;
+      margin-bottom: 20px;
+    }
+    h1 { font-size: 28px; margin-bottom: 6px; }
+    .subtitle { color: var(--muted); margin-bottom: 28px; }
+    h2 {
+      font-size: 15px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 24px 0 10px;
+    }
+    p, li { line-height: 1.8; font-size: 14px; color: var(--text); }
+    ul { padding-left: 20px; }
+    .notice {
+      margin-top: 28px;
+      padding: 16px 18px;
+      background: rgba(88,166,255,.08);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+    }
+    .notice p { color: var(--muted); }
+    .notice strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="avatar">S</div>
+    <h1>Star-zuo</h1>
+    <p class="subtitle">个人主页 · Personal Page</p>
+
+    <h2>关于</h2>
+    <p>这里是 Star-zuo 的个人页面，用于展示个人项目与作品。</p>
+
+    <h2>项目仓库</h2>
+    <ul>
+      <li><a href="https://github.com/Star-zuo/starzuo" target="_blank" rel="noopener">GitHub · Star-zuo/starzuo</a></li>
+    </ul>
+
+    <div class="notice">
+      <p><strong>版权与使用声明</strong></p>
+      <p>Copyright (c) 2026 Star-zuo. All rights reserved.<br>
+      本站及仓库内容受版权法保护，未经事先书面许可，不得复制、修改、再分发或用于商业用途。<br>
+      授权请联系：<a href="mailto:admin@yuny.work">admin@yuny.work</a></p>
+    </div>
+
+    <footer>© 2026 Star-zuo · All rights reserved.</footer>
+  </main>
+</body>
+</html>
